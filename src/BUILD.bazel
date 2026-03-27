@@ -130,10 +130,13 @@ cc_library(
         "Vector2.cc",
     ],
     hdrs = [":hdrs"],
-    copts = [
-        "-fvisibility-inlines-hidden",
-        "-fvisibility=hidden",
-    ],
+    copts = select({
+        "@platforms//os:windows": [],
+        "//conditions:default": [
+            "-fvisibility-inlines-hidden",
+            "-fvisibility=hidden",
+        ],
+    }),
     includes = ["."],
     visibility = ["//visibility:public"],
 )
