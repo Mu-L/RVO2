@@ -238,8 +238,6 @@ else()
     RVO_COMPILER_SUPPORTS_WFORMAT_SECURITY)
   check_cxx_compiler_flag(-Werror=format-security
     RVO_COMPILER_SUPPORTS_WERROR_FORMAT_SECURITY)
-  check_cxx_compiler_flag(-Wno-unused
-    RVO_COMPILER_SUPPORTS_WNO_UNUSED)
 
   if(RVO_COMPILER_SUPPORTS_WALL)
     add_compile_options(-Wall)
@@ -249,9 +247,6 @@ else()
   endif()
   if(RVO_COMPILER_SUPPORTS_WERROR_FORMAT_SECURITY)
     add_compile_options(-Werror=format-security)
-  endif()
-  if(RVO_COMPILER_SUPPORTS_WNO_UNUSED)
-    add_compile_options(-Wno-unused)
   endif()
 endif()
 
