@@ -120,7 +120,6 @@ cc_library(
     srcs = [
         "Agent.cc",
         "Agent.h",
-        "Export.cc",
         "KdTree.cc",
         "KdTree.h",
         "Line.cc",

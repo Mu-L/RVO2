@@ -62,6 +62,9 @@ if(BUILD_EXAMPLES)
     set(RVO_EXAMPLES_INTERPROCEDURAL_OPTIMIZATION OFF)
   endif()
 
+  include(CheckPIESupported)
+  check_pie_supported()
+
   add_executable(Blocks Blocks.cc)
   target_compile_definitions(Blocks PRIVATE
     ${RVO_EXAMPLES_COMPILE_DEFINITIONS})

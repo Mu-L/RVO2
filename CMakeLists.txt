@@ -55,11 +55,7 @@ option(ENABLE_CMAKE_EXPERIMENTAL_FEATURES
 
 include(CTest)
 
-if(WIN32)
-  set(BUILD_SHARED_LIBS OFF)
-else()
-  option(BUILD_SHARED_LIBS "Build all libraries as shared" ON)
-endif()
+option(BUILD_SHARED_LIBS "Build all libraries as shared" OFF)
 
 include(GNUInstallDirs)
 
@@ -71,9 +67,8 @@ set(RVO_LIBRARY RVO)
 set(RVO_NAME "RVO2 Library")
 
 set(CMAKE_CXX_STANDARD 98)
-set(CMAKE_CXX_STANDARD_REQUIRED OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_EXTENSIONS_REQUIRED OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 option(BUILD_DOCUMENTATION "Build documentation" OFF)
@@ -138,8 +133,14 @@ if(ENABLE_HARDENING)
   else()
     if(APPLE)
       set(RVO_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
-      set(CMAKE_REQUIRED_FLAGS
-        "${CMAKE_REQUIRED_FLAGS} -Werror=unused-command-line-argument")
+
+      check_cxx_compiler_flag(-Werror=unused-command-line-argument
+        RVO_COMPILER_SUPPORTS_WERROR_UNUSED_COMMAND_LINE_ARGUMENT)
+
+      if(RVO_COMPILER_SUPPORTS_WERROR_UNUSED_COMMAND_LINE_ARGUMENT)
+        set(CMAKE_REQUIRED_FLAGS
+          "${CMAKE_REQUIRED_FLAGS} -Werror=unused-command-line-argument")
+      endif()
     endif()
 
     check_cxx_compiler_flag(-D_FORTIFY_SOURCE=2
@@ -162,7 +163,7 @@ if(ENABLE_HARDENING)
     endif()
 
     if(RVO_COMPILER_SUPPORTS_D_FORTIFY_SOURCE_2)
-      add_compile_options(-D_FORTIFY_SOURCE=2)
+      add_compile_options($<$<NOT:$<CONFIG:Debug>>:-D_FORTIFY_SOURCE=2>)
     endif()
     if(RVO_COMPILER_SUPPORTS_FCF_PROTECTION)
       add_compile_options(-fcf-protection)
@@ -192,12 +193,12 @@ if(ENABLE_HARDENING)
     check_linker_flag(CXX -Wl,-z,separate-code RVO_LINKER_SUPPORTS_Z_SEPARATE_CODE)
 
     if(RVO_LINKER_SUPPORTS_BSYMBOLIC_FUNCTIONS)
-      add_link_options(-Wl,-Bsymbolic-functions)
+      add_link_options($<$<NOT:$<CONFIG:Debug>>:-Wl,-Bsymbolic-functions>)
     endif()
     if(RVO_COMPILER_SUPPORTS_FSANITIZE_SAFE_STACK
         AND RVO_LINKER_SUPPORTS_FSANITIZE_SAFE_STACK)
-      add_compile_options(-fsanitize=safe-stack)
-      add_link_options(-fsanitize=safe-stack)
+      add_compile_options($<$<NOT:$<CONFIG:Debug>>:-fsanitize=safe-stack>)
+      add_link_options($<$<NOT:$<CONFIG:Debug>>:-fsanitize=safe-stack>)
     endif()
     if(RVO_LINKER_SUPPORTS_Z_DEFS)
       add_link_options(-Wl,-z,defs)

@@ -56,7 +56,6 @@ target_sources(${RVO_LIBRARY}
     PRIVATE
       Agent.cc
       Agent.h
-      Export.cc
       KdTree.cc
       KdTree.h
       Line.cc
