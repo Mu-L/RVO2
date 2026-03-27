@@ -130,13 +130,19 @@ cc_library(
     ],
     hdrs = [":hdrs"],
     copts = select({
-        "@platforms//os:windows": [],
+        "@platforms//os:windows": ["/W4"],
         "//conditions:default": [
             "-fvisibility-inlines-hidden",
             "-fvisibility=hidden",
+            "-Wall",
+            "-Werror=format-security",
         ],
     }),
-    includes = ["."],
+    local_defines = select({
+        "@platforms//os:windows": ["RVO_EXPORTS"],
+        "//conditions:default": [],
+    }),
+    strip_include_prefix = "/src",
     visibility = ["//visibility:public"],
 )
 

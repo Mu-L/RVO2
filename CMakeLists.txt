@@ -55,7 +55,12 @@ option(ENABLE_CMAKE_EXPERIMENTAL_FEATURES
 
 include(CTest)
 
-option(BUILD_SHARED_LIBS "Build all libraries as shared" OFF)
+if(WIN32)
+  set(BUILD_SHARED_LIBS OFF)
+else()
+  option(BUILD_SHARED_LIBS "Build all libraries as shared"
+    ${PROJECT_IS_TOP_LEVEL})
+endif()
 
 include(GNUInstallDirs)
 
